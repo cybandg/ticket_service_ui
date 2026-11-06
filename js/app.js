@@ -8,7 +8,7 @@
     const STATUS_LABELS = {
       draft: 'Черновик', new: 'Новая', in_work: 'В работе', done: 'Готово', closed: 'Закрыта'
     };
-    const EDITABLE = ['new', 'in_work'];   // done/closed -> server returns TICKET_NOT_EDITABLE
+    const NOT_EDITABLE = [ 'closed'];   // closed -> server returns TICKET_NOT_EDITABLE
     const $ = (sel, root) => (root || document).querySelector(sel);
     const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
   
@@ -516,7 +516,7 @@
       if (state.mode === 'edit') {
         const t = state.tickets.find(x => x.id === state.selectedId);
         if (!t) { state.mode = 'none'; renderDetail(); return; }
-        const canEdit = EDITABLE.indexOf(t.status) !== -1;
+        const canEdit = NOT_EDITABLE.indexOf(t.status) === -1;
         const cached = canEdit ? (Store.loadForm(userId, 'edit', t.id) || {}) : {};
         const v = {
           title: cached.title !== undefined ? cached.title : t.title,
@@ -672,7 +672,7 @@
     function bindEditForm(ticket) {
       const form = $('#form-edit');
       const userId = state.user ? state.user.id : null;
-      const canEdit = EDITABLE.indexOf(ticket.status) !== -1;
+      const canEdit = NOT_EDITABLE.indexOf(ticket.status) === -1;
   
       if (canEdit) {
         form.addEventListener('input', () => {
