@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17140F">
+<title>LD LATTE — Сервис заявок на оптимизацию</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ================= ЭКРАН ВХОДА ================= -->
+<main id="screen-auth" class="auth hidden">
+  <section class="auth__intro">
+    <p class="logo">LD&nbsp;LATTE</p>
+    <h1 class="display">Сервис заявок<br><em>на оптимизацию</em></h1>
+    <p class="lead">Боты, интеграции и отчёты — в одном контуре. Заявка собирается из персонального черновика и не дублируется.</p>
+  </section>
+
+  <section class="auth__panel">
+    <div class="card">
+      <div class="card__head">
+        <h2 id="auth-title">Вход</h2>
+        <p id="auth-subtitle" class="muted">Корпоративная учётная запись</p>
+      </div>
+
+      <form id="form-login" novalidate>
+        <div class="host-box">
+          <div class="host-box__label">Хост API</div>
+          <div class="field">
+            <label for="host-input">Адрес сервера</label>
+            <input id="host-input" type="text" inputmode="url" autocomplete="off"
+                   placeholder="http://localhost:5678" spellcheck="false">
+            <p class="hint">
+              Локально — <code>http://localhost:5678</code>.<br>
+              С опубликованной страницы — <b>обязательно</b> мой ngrok-адрес, который я прислал с заданием
+              (<code>https://&lt;ваш-id&gt;.ngrok-free.app</code>, туннель на порт 5678).
+            </p>
+          </div>
+          <button type="button" id="btn-check-host" class="btn btn--ghost btn--sm">Проверить соединение</button>
+        </div>
+
+        <div class="field">
+          <label for="login-input">Логин</label>
+          <input id="login-input" type="text" autocomplete="username" spellcheck="false" required>
+        </div>
+
+        <div class="field">
+          <label for="password-input">Пароль</label>
+          <div class="password-wrap">
+            <input id="password-input" type="password" autocomplete="current-password" required>
+            <button type="button" class="eye" id="btn-eye-login" aria-label="Показать пароль">◡</button>
+          </div>
+        </div>
+
+        <div id="login-error" class="form-error hidden" role="alert"></div>
+
+        <button type="submit" id="btn-submit-login" class="btn btn--primary btn--block">Войти</button>
+
+        <div class="auth-links">
+          <button type="button" id="link-open-register" class="link">Нет аккаунта? Открыть страницу регистрации</button>
+        </div>
+      </form>
+    </div>
+    <p class="auth__footnote">Внутренний инструмент. Данные обрабатываются в закрытом контуре компании.</p>
+  </section>
+</main>
+
+<!-- ================= ЭКРАН РЕГИСТРАЦИИ ================= -->
+<main id="screen-register" class="auth hidden">
+  <section class="auth__intro">
+    <p class="logo">LD&nbsp;LATTE</p>
+    <h1 class="display">Новая<br><em>учётная запись</em></h1>
+    <p class="lead">При регистрации вам сразу выдаётся персональный черновик заявки — первый запрос можно оформить без ожидания.</p>
+    <ul class="ticks">
+      <li>Логин от 3 символов, пароль от 6</li>
+      <li>Черновик создаётся автоматически</li>
+      <li>Вход выполняется сразу после регистрации</li>
+    </ul>
+  </section>
+
+  <section class="auth__panel">
+    <div class="card">
+      <div class="card__head">
+        <h2>Регистрация</h2>
+        <p class="muted">Шаг 1 из 1</p>
+      </div>
+
+      <form id="form-register" novalidate>
+        <div class="host-box">
+          <div class="host-box__label">Хост API</div>
+          <div class="field">
+            <label for="host-input-reg">Адрес сервера</label>
+            <input id="host-input-reg" type="text" inputmode="url" autocomplete="off" spellcheck="false">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="reg-login">Логин</label>
+          <input id="reg-login" type="text" autocomplete="username" spellcheck="false" required>
+        </div>
+
+        <div class="field">
+          <label for="reg-password">Пароль</label>
+          <input id="reg-password" type="password" autocomplete="new-password" required>
+        </div>
+
+        <div class="field">
+          <label for="reg-password2">Повторите пароль</label>
+          <input id="reg-password2" type="password" autocomplete="new-password" required>
+        </div>
+
+        <div id="register-error" class="form-error hidden" role="alert"></div>
+
+        <button type="submit" id="btn-submit-register" class="btn btn--primary btn--block">Создать аккаунт и войти</button>
+
+        <div class="auth-links">
+          <button type="button" id="link-back-login" class="link">Уже есть аккаунт? Вернуться ко входу</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- ================= РАБОЧИЙ ЭКРАН ================= -->
+<div id="screen-app" class="app hidden">
+  <header class="topbar">
+    <div class="topbar__left">
+      <span class="logo logo--sm">LD&nbsp;LATTE</span>
+      <span class="topbar__sub">Сервис заявок</span>
+    </div>
+    <div class="topbar__right">
+      <button class="chip chip--host" id="host-chip" title="Изменить хост можно после выхода">
+        <span class="dot"></span><span id="host-chip-text">localhost:5678</span>
+      </button>
+      <span class="chip chip--user" id="user-chip">@user</span>
+      <button id="btn-logout" class="btn btn--ghost btn--sm">Выйти</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- ЛЕВАЯ КОЛОНКА: СПИСОК -->
+    <section class="list-col">
+      <div class="list-head">
+        <div>
+          <h2 class="section-title">Мои заявки</h2>
+          <p class="muted small" id="list-count">—</p>
+        </div>
+        <button id="btn-create" class="btn btn--primary">
+          <span class="plus">+</span> Добавить запрос
+        </button>
+      </div>
+
+      <div class="toolbar">
+        <div class="search">
+          <span class="search__icon">⌕</span>
+          <input id="search-input" type="search" placeholder="Поиск по названию…" autocomplete="off">
+          <button id="btn-clear-search" class="search__clear hidden" aria-label="Очистить">×</button>
+        </div>
+        <div class="filters" id="filters">
+          <button class="fchip is-active" data-status="all">Все</button>
+          <button class="fchip" data-status="new">Новая</button>
+          <button class="fchip" data-status="in_work">В работе</button>
+          <button class="fchip" data-status="done">Готово</button>
+          <button class="fchip" data-status="closed">Закрыта</button>
+        </div>
+      </div>
+
+      <div id="tickets" class="tickets"></div>
+
+      <div id="empty-state" class="empty hidden">
+        <p class="empty__title">Заявок пока нет</p>
+        <p class="muted">Нажмите «Добавить запрос» — форма уже привяжется к вашему черновику.</p>
+      </div>
+    </section>
+
+    <!-- ПРАВАЯ КОЛОНКА (десктоп) / ОТДЕЛЬНЫЙ ЭКРАН (мобилка) -->
+    <aside id="detail" class="detail">
+      <div class="detail__panel">
+        <header class="detail__head">
+          <div>
+            <p class="detail__eyebrow" id="detail-eyebrow">Панель</p>
+            <h3 class="detail__title" id="detail-title">Заявка</h3>
+          </div>
+          <button id="btn-detail-close" class="icon-btn" aria-label="Закрыть">×</button>
+        </header>
+        <div class="detail__body" id="detail-body"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div id="backdrop" class="backdrop hidden"></div>
+</div>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<script src="js/store.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
